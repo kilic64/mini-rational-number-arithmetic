@@ -30,3 +30,10 @@ Floating-point arithmetic drifts: `0.1 + 0.2` is `0.30000000000000004`. For calc
 ## Edge to be aware of
 
 The library uses JavaScript `number` (IEEE 754 double) internally. Arithmetic stays exact only while the intermediate cross-products fit in the safe integer range (\|n\| < 2^53). Extremely deep fraction chains can overflow that range silently. `Number.isInteger` guards the constructor inputs but cannot guard the products computed inside `add`, `multiply`, etc. For most practical ratios this never bites; for unbounded-precision work you need a BigInt-based library.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
